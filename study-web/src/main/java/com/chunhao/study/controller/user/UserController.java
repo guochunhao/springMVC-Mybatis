@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController extends BaseController
 {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Resource
     private UserService userService;
@@ -34,6 +34,8 @@ public class UserController extends BaseController
     @RequestMapping("/list")
     public void listUser(User user, HttpServletResponse response)
     {
+        logger.info("查询用户集合开始");
+
         List<User> allUser = userService.findAll();
 
         ResultObject resultObject = new ResultObject();
