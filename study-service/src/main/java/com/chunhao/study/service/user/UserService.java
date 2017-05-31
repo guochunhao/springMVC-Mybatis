@@ -1,4 +1,4 @@
-package com.chunhao.study.service;
+package com.chunhao.study.service.user;
 
 
 import com.chunhao.study.model.user.User;

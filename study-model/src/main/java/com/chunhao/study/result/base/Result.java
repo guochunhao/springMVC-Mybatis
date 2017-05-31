@@ -28,4 +28,15 @@ public class Result
     {
         this.resultMessage = resultMessage;
     }
+
+    public Result(Integer resultCode, String resultMessage)
+    {
+        this.resultCode = resultCode;
+        this.resultMessage = resultMessage;
+    }
+
+    public Result()
+    {
+        super();
+    }
 }

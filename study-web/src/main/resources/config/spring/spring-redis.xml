@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd" >
+
+    <!-- 引入 redis 配置文件 -->
+    <context:property-placeholder location="classpath:/config/redis.properties" ignore-unresolvable="true" file-encoding="utf-8" />
+
+    <!-- spring 代理 jedis 客户端功能与 redis server 通信, 依赖spring-data-redis-1.0.2.jar包. -->
+
+    <!-- 装载配置文件 -->
+    <bean id="resourcePropertySource" class="org.springframework.core.io.support.ResourcePropertySource">
+        <constructor-arg name="location">
+            <value>classpath:/config/sentinel.properties</value>
+        </constructor-arg>
+    </bean>
+
+    <!-- 初始化 sentinelConfig -->
+    <bean id="sentinelConfig" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+        <constructor-arg name="propertySource" ref="resourcePropertySource"/>
+    </bean>
+
+    <!-- jedis -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg ref="sentinelConfig"/>
+    </bean>
+    
+</beans>

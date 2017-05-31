@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
@@ -44,5 +45,52 @@
         <property name="basePackage" value="com.chunhao.study.mapper;"/>
     </bean>
 
+    <!-- jms 配置开始 -->
+    <!-- jms 可以真正产生 connection 的 ConnectionFactory， 由对应的 jms 厂商提供-->
+    <bean id="targetConnectFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="targetConnectFactory"/>
+    </bean>
+
+
+    <!-- 配置mq生产者， 生产者负责生产消息发送到 jms 服务器 -->
+    <!-- spring 提供的 JMS 的工具类，他可以进行消息的发送和接受 -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 对应 spring 的那个 connection -->
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+
+    <!-- 队列目的地 -->
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg>
+            <value>queue</value>
+        </constructor-arg>
+    </bean>
+
+    <!-- 主题目的地 -->
+    <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="topic"/>
+    </bean>
+
+
+    <!-- 配置消息接收者 开始 -->
+
+    <!-- 消息监听器 -->
+    <bean id="consumerMessageListener" class="com.chunhao.study.listener.ConsumerMessageListener"></bean>
+
+    <!-- 消息监听容器 -->
+    <bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="queueDestination"/>
+        <property name="messageListener" ref="consumerMessageListener"/>
+    </bean>
+
+    <!-- 配置消息接收者 结束 -->
+
+
+    <!-- jms 配置结束 -->
     
 </beans>

@@ -1,8 +1,8 @@
-package com.chunhao.study.service.impl;
+package com.chunhao.study.serviceimpl.user;
 
 import com.chunhao.study.mapper.user.UserMapper;
 import com.chunhao.study.model.user.User;
-import com.chunhao.study.service.UserService;
+import com.chunhao.study.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

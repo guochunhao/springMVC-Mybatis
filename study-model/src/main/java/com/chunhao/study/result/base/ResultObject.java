@@ -7,6 +7,16 @@ public class ResultObject extends Result
 {
     private Object object;
 
+    public ResultObject(Integer resultCode, String resultMessage)
+    {
+        super(resultCode, resultMessage);
+    }
+
+    public ResultObject()
+    {
+        super();
+    }
+
     public Object getObject()
     {
         return object;
@@ -17,3 +27,4 @@ public class ResultObject extends Result
         this.object = object;
     }
 }
+

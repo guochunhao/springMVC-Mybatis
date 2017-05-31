@@ -3,7 +3,7 @@ package com.chunhao.study.controller.user;
 import com.chunhao.study.common.BaseController;
 import com.chunhao.study.model.user.User;
 import com.chunhao.study.result.base.ResultObject;
-import com.chunhao.study.service.UserService;
+import com.chunhao.study.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
