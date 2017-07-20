@@ -10,7 +10,9 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd" >
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/jms
+       http://www.springframework.org/schema/jms/spring-jms.xsd">
 
     <!-- jms 配置开始 -->
     <!-- jms 可以真正产生 connection 的 ConnectionFactory， 由对应的 jms 厂商提供-->
@@ -18,10 +20,10 @@
         <property name="brokerURL" value="tcp://localhost:61616"/>
     </bean>
 
+    <!-- spring 还有一个 connectionFactory org.springframework.jms.connection.CachingConnectionFactory -->
     <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
         <property name="targetConnectionFactory" ref="targetConnectFactory"/>
     </bean>
-
 
     <!-- 配置mq生产者， 生产者负责生产消息发送到 jms 服务器 -->
     <!-- spring 提供的 JMS 的工具类，他可以进行消息的发送和接受 -->
@@ -32,14 +34,12 @@
 
     <!-- 队列目的地 -->
     <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>queue</value>
-        </constructor-arg>
+        <constructor-arg value="queue" />
     </bean>
 
     <!-- 主题目的地 -->
     <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
-        <constructor-arg value="topic"/>
+        <constructor-arg value="topic" />
     </bean>
 
 
@@ -56,6 +56,27 @@
     </bean>
 
     <!-- 配置消息接收者 结束 -->
+
+    <!-- sessionAwareMessageListener 配置消息接收者 开始 -->
+    <!-- sessionAwareQueue 队列目的地 -->
+    <bean id="sessionAwareQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="sessionAwareQueue" />
+    </bean>
+
+    <!-- 消息监听器 -->
+    <bean id="consumerSessionAwareListener" class="com.chunhao.study.listener.ConsumerSessionAwareListener">
+        <!--<property name="queueDestination" ref="queueDestination"/>-->
+    </bean>
+
+
+    <!-- 消息监听容器 -->
+    <bean id="sessionAwareListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="sessionAwareQueueDestination"/>
+        <property name="messageListener" ref="consumerSessionAwareListener"/>
+    </bean>
+
+    <!-- sessionAwareMessageListener 配置消息接收者 结束 -->
 
 
     <!-- jms 配置结束 -->

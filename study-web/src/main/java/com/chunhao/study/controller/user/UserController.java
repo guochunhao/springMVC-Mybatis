@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +42,37 @@ public class UserController extends BaseController
         ResultObject resultObject = new ResultObject();
 
         resultObject.setObject(allUser);
+
+        printJson(resultObject, response);
+
+    }
+
+    /**
+     * 查询用户集合
+     *
+     * @param user
+     * @param response
+     */
+    @RequestMapping("/add")
+    public void addUser(HttpServletResponse response)
+    {
+        logger.info("add用户开始");
+
+        User user = new User();
+        user.setAddress("南京市");
+        user.setBirthday(new Date());
+        user.setSex("1");
+        user.setUsername("guochunhao");
+        try
+        {
+            userService.addUser(user);
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ResultObject resultObject = new ResultObject();
 
         printJson(resultObject, response);
 

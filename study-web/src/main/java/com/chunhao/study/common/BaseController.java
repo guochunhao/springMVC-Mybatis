@@ -5,10 +5,15 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.chunhao.study.result.base.Result;
 import com.chunhao.study.util.base.DateTimeUtil;
 import com.chunhao.study.util.base.IgnorePropertyPreFilter;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by count on 17/3/17.
@@ -81,6 +86,15 @@ public class BaseController
             e.printStackTrace();
         }
 
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder webDataBinder)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setLenient(false);
+
+        webDataBinder.registerCustomEditor(Date.class, new CustomDateEditor(simpleDateFormat, true));
     }
 
 }

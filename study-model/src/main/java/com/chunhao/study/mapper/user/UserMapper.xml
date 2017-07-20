@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.chunhao.study.model.user.User" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
     <result column="sex" property="sex" jdbcType="CHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
   </resultMap>
@@ -102,15 +102,15 @@
   <insert id="insert" parameterType="com.chunhao.study.model.user.User" >
     insert into user (id, username, birthday, 
       sex, address)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
       #{sex,jdbcType=CHAR}, #{address,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.chunhao.study.model.user.User" >
+    <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+      SELECT LAST_INSERT_ID() as id
+    </selectKey>
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="username != null" >
         username,
       </if>
@@ -125,14 +125,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="username != null" >
         #{username,jdbcType=VARCHAR},
       </if>
       <if test="birthday != null" >
-        #{birthday,jdbcType=DATE},
+        #{birthday,jdbcType=TIMESTAMP},
       </if>
       <if test="sex != null" >
         #{sex,jdbcType=CHAR},
@@ -158,7 +155,7 @@
         username = #{record.username,jdbcType=VARCHAR},
       </if>
       <if test="record.birthday != null" >
-        birthday = #{record.birthday,jdbcType=DATE},
+        birthday = #{record.birthday,jdbcType=TIMESTAMP},
       </if>
       <if test="record.sex != null" >
         sex = #{record.sex,jdbcType=CHAR},
@@ -175,7 +172,7 @@
     update user
     set id = #{record.id,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
-      birthday = #{record.birthday,jdbcType=DATE},
+      birthday = #{record.birthday,jdbcType=TIMESTAMP},
       sex = #{record.sex,jdbcType=CHAR},
       address = #{record.address,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -189,7 +186,7 @@
         username = #{username,jdbcType=VARCHAR},
       </if>
       <if test="birthday != null" >
-        birthday = #{birthday,jdbcType=DATE},
+        birthday = #{birthday,jdbcType=TIMESTAMP},
       </if>
       <if test="sex != null" >
         sex = #{sex,jdbcType=CHAR},
@@ -203,7 +200,7 @@
   <update id="updateByPrimaryKey" parameterType="com.chunhao.study.model.user.User" >
     update user
     set username = #{username,jdbcType=VARCHAR},
-      birthday = #{birthday,jdbcType=DATE},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
       sex = #{sex,jdbcType=CHAR},
       address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

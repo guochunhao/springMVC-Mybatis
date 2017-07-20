@@ -27,6 +27,13 @@ public class JmsTestController extends BaseController
     private ProduceService produceService;
 
     @Autowired
+    @Qualifier("sessionAwareQueueDestination")
+    private Destination sessionAwareQueueDestination;
+
+    /**
+     * 测试 sessionAwareListener
+     */
+    @Autowired
     @Qualifier("queueDestination")
     private Destination destination;
 
@@ -46,6 +53,29 @@ public class JmsTestController extends BaseController
         {
             produceService.sendMessage(destination, jsonUser);
             printJson(new Result(1, "jms 发送成功!"), response);
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            printJson(new Result(0, "jms 发送失败!"), response);
+        }
+
+
+    }
+
+    @RequestMapping("/receiveBySessionAware")
+    public void receiveBySessionAware(HttpServletResponse response)
+    {
+
+        List<User> allUser = userService.findAll();
+
+        String jsonUser = JSON.toJSONString(allUser);
+        System.out.println("发送内容为：" + jsonUser);
+
+        try
+        {
+            produceService.sendMessage(sessionAwareQueueDestination, jsonUser);
+            printJson(new Result(1, jsonUser), response);
 
         } catch (Exception e)
         {

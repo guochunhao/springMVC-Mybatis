@@ -2,6 +2,7 @@ package com.chunhao.study.service.user;
 
 
 import com.chunhao.study.model.user.User;
+import com.chunhao.study.model.user.UserExt;
 
 import java.util.List;
 
@@ -11,4 +12,8 @@ import java.util.List;
 public interface UserService
 {
     List<User> findAll();
+
+    int addUser(User record) throws Exception;
+
+    int addUserExt(UserExt record) throws Exception;
 }
